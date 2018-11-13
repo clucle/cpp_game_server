@@ -11,17 +11,26 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <sys/epoll.h>
+
 class Connection
 {
 public:
 	Connection();
-	~Connection();
-	void run();
-	void stop() { is_run = false; };
+	Connection(Connection const &) = delete;
+	~Connection() { m_thread.join(); close(sock_fd); };
+	void runThread() { m_thread = std::thread(&Connection::run, this); };
 
 private:
+	const int READ_SIZE = 1024;
+	const int MAX_EVNETS = 1024;
+	const int MAX_CLIENTS = 1024;
+	const int EPOLL_TIME_OUT = 1024;
+
 	int sock_fd;
-	bool is_run = false;
+
+	std::thread m_thread;
+	void run() const;
 	void printError(const std::string& errorStr);
 };
 

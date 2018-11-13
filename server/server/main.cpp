@@ -1,7 +1,8 @@
 #include <cstdio>
+#include "server.h"
 
 int main()
 {
-    printf("hello from server!\n");
+	Server server;
     return 0;
 }

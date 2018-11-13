@@ -1,8 +1,11 @@
 #pragma once
-class server
+#include "Connection.h"
+class Server
 {
 public:
-	server();
-	~server();
+	Server();
+	~Server();
+private:
+
 };
 
