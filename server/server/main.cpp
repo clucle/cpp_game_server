@@ -1,8 +1,13 @@
 #include <cstdio>
-#include "server.h"
+#include "common.h"
+#include "epoll.h"
+#include "MessageQueue.h"
+
+MessageQueue gMessageQueue;
 
 int main()
 {
-	Server server;
+	Epoll epoll;
+	epoll.runThread();
     return 0;
 }

@@ -75,14 +75,17 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="epoll.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="server.cpp" />
+    <ClCompile Include="MessageQueue.cpp" />
+    <ClCompile Include="Userpool.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Connection.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="epoll.h" />
     <ClInclude Include="const.h" />
-    <ClInclude Include="server.h" />
+    <ClInclude Include="MessageQueue.h" />
+    <ClInclude Include="Userpool.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>

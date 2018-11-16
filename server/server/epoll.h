@@ -1,10 +1,13 @@
 #pragma once
 #include "const.h"
+#include "common.h"
+#include "MessageQueue.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <fcntl.h>
 #include <thread>
 #include <iostream>
 #include <string>
@@ -13,13 +16,13 @@
 
 #include <sys/epoll.h>
 
-class Connection
+class Epoll
 {
 public:
-	Connection();
-	Connection(Connection const &) = delete;
-	~Connection() { m_thread.join(); close(sock_fd); };
-	void runThread() { m_thread = std::thread(&Connection::run, this); };
+	Epoll();
+	Epoll(Epoll const &) = delete;
+	~Epoll() { m_thread.join(); close(sock_fd); };
+	void runThread() { m_thread = std::thread(&Epoll::run, this); };
 
 private:
 	const int READ_SIZE = 1024;
@@ -30,6 +33,9 @@ private:
 	int sock_fd;
 
 	std::thread m_thread;
+
+	int initSockFd();
+	void setNonBlock(int fd);
 	void run() const;
 	void printError(const std::string& errorStr);
 };

@@ -1,10 +1,17 @@
-#include "Connection.h"
+#include "epoll.h"
 
-Connection::Connection()
+Epoll::Epoll()
 {
-	if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	sock_fd = initSockFd();
+	setNonBlock(sock_fd);
+}
+
+int Epoll::initSockFd()
+{
+	int fd;
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		printError("Fail Open Socket fd");
-		close(sock_fd);
+		close(fd);
 		exit(0);
 	}
 
@@ -14,24 +21,39 @@ Connection::Connection()
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(PORT);
 
-	if (bind(sock_fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+	if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
 		printError("Fail Bind Socket");
-		close(sock_fd);
+		close(fd);
 		exit(0);
 	}
 
-	listen(sock_fd, KERNEL_TCP_BACKLOG);
+	listen(fd, KERNEL_TCP_BACKLOG);
 
-	if (sock_fd < 0) {
+	if (fd < 0) {
 		printError("Fail Listen Socket");
 		exit(0);
 	}
-
+	std::cout << gMessageQueue.size() << std::endl;
 	std::cout << "Listen Port at " << PORT << std::endl;
+	return fd;
 }
 
-void Connection::run() const
+void Epoll::setNonBlock(int fd)
 {
+	int flags;
+	flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1) {
+		std::cout << "Fail Set Non Block" << std::endl;
+	}
+	else {
+		std::cout << "Set Non Block" << std::endl;
+		fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+	}
+}
+
+void Epoll::run() const
+{
+	std::cout << gMessageQueue.size() << std::endl;
 	int event_count;
 	register int i;
 	char read_buffer[READ_SIZE + 1];
@@ -101,7 +123,7 @@ void Connection::run() const
 	close(epoll_fd);
 }
 
-void Connection::printError(const std::string & errorStr)
+void Epoll::printError(const std::string & errorStr)
 {
 	std::cout << "[Connection] : " << errorStr << std::endl;
 }
