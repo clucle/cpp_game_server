@@ -77,15 +77,14 @@
   <ItemGroup>
     <ClCompile Include="epoll.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MessageQueue.cpp" />
-    <ClCompile Include="Userpool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="epoll.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="MessageQueue.h" />
-    <ClInclude Include="Userpool.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserPool.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>

@@ -7,9 +7,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <iostream>
 #include <fcntl.h>
 #include <thread>
-#include <iostream>
 #include <string>
 #include <unistd.h>
 #include <string.h>

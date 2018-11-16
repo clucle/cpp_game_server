@@ -33,7 +33,6 @@ int Epoll::initSockFd()
 		printError("Fail Listen Socket");
 		exit(0);
 	}
-	std::cout << gMessageQueue.size() << std::endl;
 	std::cout << "Listen Port at " << PORT << std::endl;
 	return fd;
 }
@@ -53,7 +52,6 @@ void Epoll::setNonBlock(int fd)
 
 void Epoll::run() const
 {
-	std::cout << gMessageQueue.size() << std::endl;
 	int event_count;
 	register int i;
 	char read_buffer[READ_SIZE + 1];
@@ -95,22 +93,21 @@ void Epoll::run() const
 					return;
 				}
 				else {
-
 					struct epoll_event event;
 					event.events = EPOLLIN;
 					event.data.fd = client_sock_fd;
 
+					gUserPool.addUser(client_sock_fd, inet_ntoa(client_addr.sin_addr));
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
-						close(sock_fd);
-						close(epoll_fd);
-						return;
+						std::cout << "Fail Add Epoll Client" << std::endl;
+						gUserPool.delUser(inet_ntoa(client_addr.sin_addr));
 					}
-					// user add
 				}
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
 				if (bytes_read <= 0) {
+					gUserPool.delUser(inet_ntoa(client_addr.sin_addr));
 					close(events[i].data.fd);
 					continue;
 				}
