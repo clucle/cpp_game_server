@@ -98,7 +98,8 @@ void Epoll::run() const
 					event.data.fd = client_sock_fd;
 
 					User user(client_sock_fd, inet_ntoa(client_addr.sin_addr));
-					gUserPool.addUser(user);
+					gUserPool.addUser(User::genHash(client_sock_fd, inet_ntoa(client_addr.sin_addr)), user);
+					gUserPool.print();
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
 						std::cout << "Fail Add Epoll Client" << std::endl;
 						gUserPool.delUser(user);
@@ -108,12 +109,16 @@ void Epoll::run() const
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
 				if (bytes_read <= 0) {
-					User user(events[i].data.fd, inet_ntoa(client_addr.sin_addr));
-					gUserPool.delUser(user);
+					size_t key = User::genHash(events[i].data.fd, inet_ntoa(client_addr.sin_addr));
+					std::cout << key << " exit " << std::endl;
+					gUserPool.delUser(key);
+					gUserPool.print();
 					close(events[i].data.fd);
 					continue;
 				}
 				read_buffer[bytes_read] = '\0';
+
+				std::cout << events[i].data.fd << " " << inet_ntoa(client_addr.sin_addr) << " " << User::genHash(client_sock_fd, inet_ntoa(client_addr.sin_addr)) << std::endl;
 				write(events[i].data.fd, read_buffer, bytes_read);
 				std::cout << read_buffer << std::endl;
 			}

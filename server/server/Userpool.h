@@ -11,6 +11,10 @@ public:
 		User user(fd, ip);
 		userPool.insert({ user.getHash(), user });
 	}
+	
+	void addUser(size_t key, User user) {
+		userPool.insert({ key, user });
+	}
 
 	void addUser(User user) {
 		userPool.insert({ user.getHash(), user });
