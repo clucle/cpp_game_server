@@ -1,22 +1,17 @@
 #pragma once
 #include <cstring>
+
 class User
 {
 public:
 	User(int _fd, const char* _ip) { fd = _fd; strcpy(ip, _ip); }
 
-	friend std::ostream & operator<<(std::ostream & _stream, User const & u) {
-		_stream << std::to_string(u.fd);
-		return _stream;
+	std::size_t getHash() {
+		return ((std::hash<int>()(fd)) ^ (std::hash<const char *>()(ip)));
 	}
 
-	struct cmpUser
-	{
-		bool operator()(const char* a, const char* b) const
-		{
-			return std::strcmp(a, b) < 0;
-		}
-	};
+	int getFd() { return fd; }
+	std::string getIp() { return ip; }
 
 private:
 	int fd;

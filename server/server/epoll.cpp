@@ -97,17 +97,19 @@ void Epoll::run() const
 					event.events = EPOLLIN;
 					event.data.fd = client_sock_fd;
 
-					gUserPool.addUser(client_sock_fd, inet_ntoa(client_addr.sin_addr));
+					User user(client_sock_fd, inet_ntoa(client_addr.sin_addr));
+					gUserPool.addUser(user);
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
 						std::cout << "Fail Add Epoll Client" << std::endl;
-						gUserPool.delUser(inet_ntoa(client_addr.sin_addr));
+						gUserPool.delUser(user);
 					}
 				}
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
 				if (bytes_read <= 0) {
-					gUserPool.delUser(inet_ntoa(client_addr.sin_addr));
+					User user(events[i].data.fd, inet_ntoa(client_addr.sin_addr));
+					gUserPool.delUser(user);
 					close(events[i].data.fd);
 					continue;
 				}
