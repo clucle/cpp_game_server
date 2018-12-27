@@ -7,7 +7,7 @@
 class UserPool
 {
 public:
-	void addUser(int fd, const char* ip) {
+	void addUser(int fd, std::string ip) {
 		User user(fd, ip);
 		userPool.insert({ user.getHash(), user });
 	}
