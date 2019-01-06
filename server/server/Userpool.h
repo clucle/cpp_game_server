@@ -29,6 +29,14 @@ public:
 	}
 
 	User getUser(size_t key) {
+		std::unordered_map<size_t, User>::iterator iter;
+		iter = userPool.find(key);
+		if (iter != userPool.end()) {
+			std::cout << "Success : key " << key << '\n';
+			return userPool.at(key);
+		}
+
+		std::cout << "Wrong : key " << key << '\n';
 		return userPool.at(key);
 	}
 
