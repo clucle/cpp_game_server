@@ -28,6 +28,10 @@ public:
 		userPool.erase(user.getHash());
 	}
 
+	User getUser(size_t key) {
+		return userPool.at(key);
+	}
+
 	void print() {
 		for (auto it = userPool.begin(); it != userPool.end(); ++it)
 			std::cout << " " << it->first << " " << it->second.getFd() << " " << it->second.getIp() << " " << it->second.getHash() << std::endl;

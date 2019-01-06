@@ -109,9 +109,9 @@ void Epoll::run() const
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
+				std::string client_ip(inet_ntoa(client_addr.sin_addr));
+				size_t key = User::genHash(events[i].data.fd, client_ip);
 				if (bytes_read <= 0) {
-					std::string client_ip(inet_ntoa(client_addr.sin_addr));
-					size_t key = User::genHash(events[i].data.fd, client_ip);
 					std::cout << key << " exit " << std::endl;
 					gUserPool.delUser(key);
 					gUserPool.print();
@@ -121,6 +121,7 @@ void Epoll::run() const
 				read_buffer[bytes_read] = '\0';
 
 				std::cout << events[i].data.fd << " " << inet_ntoa(client_addr.sin_addr) << " " << User::genHash(client_sock_fd, inet_ntoa(client_addr.sin_addr)) << std::endl;
+				std::cout << gUserPool.getUser(key).getFd() << " " << gUserPool.getUser(key).getIp() << '\n';
 				write(events[i].data.fd, read_buffer, bytes_read);
 				std::cout << read_buffer << std::endl;
 			}
