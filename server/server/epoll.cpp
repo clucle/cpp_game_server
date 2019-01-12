@@ -109,10 +109,10 @@ void Epoll::run() const
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
+				getpeername(events[i].data.fd, (struct sockaddr *)&client_addr, &client_len);
 				std::string client_ip(inet_ntoa(client_addr.sin_addr));
 				size_t key = User::genHash(events[i].data.fd, client_ip);
 				User user = gUserPool.getUser(key);
-				std::cout << "fd : " << events[i].data.fd << " ip : " << user.getIp() << " key : " << key << '\n';
 				if (bytes_read <= 0) {
 					std::cout << key << " exit " << std::endl;
 					gUserPool.delUser(key);
