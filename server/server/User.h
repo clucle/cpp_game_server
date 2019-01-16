@@ -1,4 +1,5 @@
-#pragma once
+#ifndef USER
+#define USER
 #include <cstring>
 
 class User
@@ -23,3 +24,4 @@ private:
 	std::hash<std::string> userHashFn;
 	// TODO: using seed to make hash
 };
+#endif

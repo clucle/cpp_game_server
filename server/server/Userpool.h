@@ -1,4 +1,5 @@
-#pragma once
+#ifndef USER_POOL
+#define USER_POOL
 
 #include "User.h"
 #include <iostream>
@@ -48,4 +49,4 @@ public:
 private:
 	std::unordered_map<size_t, User> userPool;
 };
-
+#endif
