@@ -66,7 +66,7 @@ void Epoll::run() const
 
 	event.events = EPOLLIN;
 	event.data.fd = sock_fd;
-	
+
 	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, sock_fd, &event)) {
 		close(sock_fd);
 		close(epoll_fd);
@@ -109,8 +109,13 @@ void Epoll::run() const
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
-				getpeername(events[i].data.fd, (struct sockaddr *)&client_addr, &client_len);
+				std::cout << events[i].data.fd << " ip : " << inet_ntoa(client_addr.sin_addr) << '\n';
+				if (getpeername(events[i].data.fd, (struct sockaddr *)&client_addr, &client_len) == -1) {
+					// TODO : 종료시 에러나는 중
+					fprintf(stderr, "Fail Get Peer Name : %s\n", strerror(errno));
+				}
 				std::string client_ip(inet_ntoa(client_addr.sin_addr));
+				std::cout << events[i].data.fd << " ip : " << client_ip << '\n';
 				size_t key = User::genHash(events[i].data.fd, client_ip);
 				User user = gUserPool.getUser(key);
 				if (bytes_read <= 0) {
@@ -122,7 +127,6 @@ void Epoll::run() const
 				}
 				read_buffer[bytes_read] = '\0';
 				gMessageQueue.push(user, read_buffer);
-				write(events[i].data.fd, read_buffer, bytes_read);
 			}
 		}
 	}

@@ -1,15 +1,19 @@
 #ifndef MESSAGE_QUEUE
 #define MESSAGE_QUEUE
 
+
 #include <queue>
 #include <string>
 #include <utility>
 #include <mutex>
 #include <thread>
 #include <condition_variable>
-
 #include <iostream>
+
+#include "const.h"
+#include "common.h"
 #include "User.h"
+#include "UserPool.h"
 
 class MessageQueue
 {
@@ -33,6 +37,12 @@ public:
 		msgs.pop();
 		// do something
 		if (DEBUG) std::cout << "[POP] : " << val.second << '\n';
+		std::string msg = std::to_string(val.first.getFd()) + " : " + std::string(val.second);
+		userPool->broadcast(msg);
+	}
+
+	void setUserPool(UserPool* _userPool) {
+		userPool = _userPool;
 	}
 
 	std::pair<User, char*> front() { return msgs.front(); }
@@ -46,6 +56,7 @@ private:
 	mutable std::mutex m;
 	std::condition_variable c;
 	std::thread m_thread;
+	UserPool* userPool;
 	void run() {
 		for (;;)
 		{

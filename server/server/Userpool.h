@@ -2,6 +2,8 @@
 #define USER_POOL
 
 #include "User.h"
+#include <string>
+#include <unistd.h>
 #include <iostream>
 #include <unordered_map>
 
@@ -12,7 +14,7 @@ public:
 		User user(fd, ip);
 		userPool.insert({ user.getHash(), user });
 	}
-	
+
 	void addUser(size_t key, User user) {
 		userPool.insert({ key, user });
 	}
@@ -44,6 +46,12 @@ public:
 	void print() {
 		for (auto it = userPool.begin(); it != userPool.end(); ++it)
 			std::cout << " " << it->first << " " << it->second.getFd() << " " << it->second.getIp() << " " << it->second.getHash() << std::endl;
+	}
+
+	void broadcast(std::string msg) {
+		for (auto it = userPool.begin(); it != userPool.end(); ++it) {
+			write(it->second.getFd(), &msg[0], msg.length());
+		}
 	}
 
 private:
