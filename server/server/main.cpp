@@ -10,5 +10,6 @@ int main()
 {
 	Epoll epoll;
 	epoll.runThread();
+	epoll.joinThread();
     return 0;
 }
