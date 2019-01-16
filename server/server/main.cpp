@@ -10,6 +10,8 @@ int main()
 {
 	Epoll epoll;
 	epoll.runThread();
+	gMessageQueue.runThread();
+	gMessageQueue.joinThread();
 	epoll.joinThread();
     return 0;
 }
