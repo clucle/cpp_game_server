@@ -55,7 +55,7 @@ void Epoll::run()
 	int event_count;
 	register int i;
 	char read_buffer[READ_SIZE + 1];
-	size_t bytes_read;
+	int bytes_read;
 	struct epoll_event event;
 	struct epoll_event events[MAX_EVNETS];
 
@@ -96,10 +96,10 @@ void Epoll::run()
 					struct epoll_event event;
 					event.events = EPOLLIN;
 					event.data.fd = client_sock_fd;
-
+					// TODO : user의 정보 construct
 					std::string client_ip(inet_ntoa(client_addr.sin_addr));
 					User user(client_sock_fd, client_ip);
-					userPool->addUser(User::genHash(client_sock_fd, client_ip), user);
+					userPool->addUser(user);
 					userPool->print();
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
 						std::cout << "Fail Add Epoll Client" << std::endl;
@@ -109,18 +109,9 @@ void Epoll::run()
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
-				std::cout << events[i].data.fd << " ip : " << inet_ntoa(client_addr.sin_addr) << '\n';
-				if (getpeername(events[i].data.fd, (struct sockaddr *)&client_addr, &client_len) == -1) {
-					// TODO : 종료시 에러나는 중
-					fprintf(stderr, "Fail Get Peer Name : %s\n", strerror(errno));
-				}
-				std::string client_ip(inet_ntoa(client_addr.sin_addr));
-				std::cout << events[i].data.fd << " ip : " << client_ip << '\n';
-				size_t key = User::genHash(events[i].data.fd, client_ip);
-				User user = userPool->getUser(key);
+				User user = userPool->getUser(events[i].data.fd);
 				if (bytes_read <= 0) {
-					std::cout << key << " exit " << std::endl;
-					userPool->delUser(key);
+					userPool->delUser(user);
 					userPool->print();
 					close(events[i].data.fd);
 					continue;

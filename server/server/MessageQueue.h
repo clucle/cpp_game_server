@@ -22,7 +22,7 @@ public:
 
 	void push(User user, char* msg) {
 		std::lock_guard<std::mutex> lock(m);
-		if (DEBUG) std::cout << "[QUEUE] ip : " << user.getIp() << " fd : " << user.getFd() << " hash : " << user.getHash() << " msgs : " << msg << '\n';
+		if (DEBUG) std::cout << "[QUEUE] ip : " << user.getIp() << " fd : " << user.getFd() << " msgs : " << msg << '\n';
 		msgs.push(std::make_pair(user, msg));
 		c.notify_one();
 	}

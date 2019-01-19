@@ -10,42 +10,27 @@
 class UserPool
 {
 public:
-	void addUser(int fd, std::string ip) {
-		User user(fd, ip);
-		userPool.insert({ user.getHash(), user });
-	}
-
-	void addUser(size_t key, User user) {
-		userPool.insert({ key, user });
-	}
-
 	void addUser(User user) {
-		userPool.insert({ user.getHash(), user });
-	}
-
-	void delUser(size_t key) {
-		userPool.erase(key);
+		userPool.insert({ user.getFd(), user });
 	}
 
 	void delUser(User user) {
-		userPool.erase(user.getHash());
+		userPool.erase(user.getFd());
 	}
 
-	User getUser(size_t key) {
-		std::unordered_map<size_t, User>::iterator iter;
-		iter = userPool.find(key);
+	User getUser(int fd) {
+		std::unordered_map<int, User>::iterator iter;
+		iter = userPool.find(fd);
 		if (iter != userPool.end()) {
-			std::cout << "Success : key " << key << '\n';
-			return userPool.at(key);
+			return userPool.at(fd);
 		}
-
-		std::cout << "Wrong : key " << key << '\n';
-		return userPool.at(key);
+		std::cout << "Wrong : key " << fd << '\n';
+		return userPool.at(fd);
 	}
 
 	void print() {
 		for (auto it = userPool.begin(); it != userPool.end(); ++it)
-			std::cout << " " << it->first << " " << it->second.getFd() << " " << it->second.getIp() << " " << it->second.getHash() << std::endl;
+			std::cout << " " << it->first << " " << it->second.getFd() << " " << it->second.getIp() << std::endl;
 	}
 
 	void broadcast(std::string msg) {
@@ -55,6 +40,6 @@ public:
 	}
 
 private:
-	std::unordered_map<size_t, User> userPool;
+	std::unordered_map<int, User> userPool;
 };
 #endif
