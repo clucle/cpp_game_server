@@ -26,6 +26,8 @@ public:
 	~Epoll() { m_thread.join(); close(sock_fd); };
 	void runThread() { m_thread = std::thread(&Epoll::run, this); };
 	void joinThread() { m_thread.join(); };
+	void setUserPool(UserPool* _userPool) { userPool = _userPool; };
+	void setMessageQueue(MessageQueue* _messageQueue) { messageQueue = _messageQueue; };
 
 private:
 	const int READ_SIZE = 1024;
@@ -37,9 +39,12 @@ private:
 
 	std::thread m_thread;
 
+	UserPool* userPool;
+	MessageQueue* messageQueue;
+
 	int initSockFd();
 	void setNonBlock(int fd);
-	void run() const;
+	void run();
 	void printError(const std::string& errorStr);
 };
 #endif

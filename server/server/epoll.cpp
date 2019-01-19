@@ -50,7 +50,7 @@ void Epoll::setNonBlock(int fd)
 	}
 }
 
-void Epoll::run() const
+void Epoll::run()
 {
 	int event_count;
 	register int i;
@@ -99,11 +99,11 @@ void Epoll::run() const
 
 					std::string client_ip(inet_ntoa(client_addr.sin_addr));
 					User user(client_sock_fd, client_ip);
-					gUserPool.addUser(User::genHash(client_sock_fd, client_ip), user);
-					gUserPool.print();
+					userPool->addUser(User::genHash(client_sock_fd, client_ip), user);
+					userPool->print();
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
 						std::cout << "Fail Add Epoll Client" << std::endl;
-						gUserPool.delUser(user);
+						userPool->delUser(user);
 					}
 				}
 			}
@@ -117,16 +117,16 @@ void Epoll::run() const
 				std::string client_ip(inet_ntoa(client_addr.sin_addr));
 				std::cout << events[i].data.fd << " ip : " << client_ip << '\n';
 				size_t key = User::genHash(events[i].data.fd, client_ip);
-				User user = gUserPool.getUser(key);
+				User user = userPool->getUser(key);
 				if (bytes_read <= 0) {
 					std::cout << key << " exit " << std::endl;
-					gUserPool.delUser(key);
-					gUserPool.print();
+					userPool->delUser(key);
+					userPool->print();
 					close(events[i].data.fd);
 					continue;
 				}
 				read_buffer[bytes_read] = '\0';
-				gMessageQueue.push(user, read_buffer);
+				messageQueue->push(user, read_buffer);
 			}
 		}
 	}

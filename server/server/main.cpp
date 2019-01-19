@@ -3,12 +3,13 @@
 // #include "MessageQueue.h"
 // #include "Userpool.h"
 
-MessageQueue gMessageQueue;
-UserPool gUserPool;
-
 int main()
 {
 	Epoll epoll;
+	MessageQueue gMessageQueue;
+	UserPool gUserPool;
+	epoll.setUserPool(&gUserPool);
+	epoll.setMessageQueue(&gMessageQueue);
 	epoll.runThread();
 	gMessageQueue.setUserPool(&gUserPool);
 	gMessageQueue.runThread();
