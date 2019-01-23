@@ -117,7 +117,8 @@ void Epoll::run()
 					continue;
 				}
 				read_buffer[bytes_read] = '\0';
-				messageQueue->push(user, read_buffer);
+				std::string read_string(read_buffer);
+				messageQueue->push(user, read_string);
 			}
 		}
 	}
