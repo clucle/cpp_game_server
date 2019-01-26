@@ -35,10 +35,21 @@ public:
 		}
 		std::pair<User*, std::string> val = msgs.front();
 		msgs.pop();
-		// do something
-		if (DEBUG) std::cout << "[POP] : " << val.second << '\n';
-		std::string msg = std::to_string(val.first->getFd()) + " : " + std::string(val.second);
-		userPool->broadcast(msg);
+
+		User* &user = val.first;
+		std::string msg = user->getRemainMsg() + val.second;
+		// token split
+		size_t pos = 0;
+		std::string token;
+		while ((pos = msg.find(delimiter)) != std::string::npos) {
+			token = msg.substr(0, pos);
+			std::cout << token << std::endl;
+			std::string tokenMsg = std::to_string(user->getFd()) + " : " + token;
+			userPool->broadcast(tokenMsg);
+			if (DEBUG) std::cout << "[POP] : " << val.second << '\n';
+			msg.erase(0, pos + delimiter.length());
+		}
+		user->setRemainMsg(msg);
 	}
 
 	void setUserPool(UserPool* _userPool) {
@@ -64,5 +75,6 @@ private:
 		}
 	}
 	bool DEBUG = 1;
+	std::string delimiter = ">~<";
 };
 #endif
