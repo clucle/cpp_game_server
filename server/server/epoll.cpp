@@ -98,7 +98,7 @@ void Epoll::run()
 					event.data.fd = client_sock_fd;
 					// TODO : userÀÇ Á¤º¸ construct
 					std::string client_ip(inet_ntoa(client_addr.sin_addr));
-					User user(client_sock_fd, client_ip);
+					User* user = new User(client_sock_fd, client_ip);
 					userPool->addUser(user);
 					userPool->print();
 					if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sock_fd, &event)) {
@@ -109,7 +109,7 @@ void Epoll::run()
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
-				User user = userPool->getUser(events[i].data.fd);
+				User* user = userPool->getUser(events[i].data.fd);
 				if (bytes_read <= 0) {
 					userPool->delUser(user);
 					userPool->print();

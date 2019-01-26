@@ -20,9 +20,9 @@ class MessageQueue
 public:
 	int size() { return (int)msgs.size(); }
 
-	void push(User user, std::string msg) {
+	void push(User* user, std::string msg) {
 		std::lock_guard<std::mutex> lock(m);
-		if (DEBUG) std::cout << "[QUEUE] ip : " << user.getIp() << " fd : " << user.getFd() << " msgs : " << msg << '\n';
+		if (DEBUG) std::cout << "[QUEUE] ip : " << user->getIp() << " fd : " << user->getFd() << " msgs : " << msg << '\n';
 		msgs.push(std::make_pair(user, msg));
 		c.notify_one();
 	}
@@ -33,11 +33,11 @@ public:
 		{
 			c.wait(lock);
 		}
-		std::pair<User, std::string> val = msgs.front();
+		std::pair<User*, std::string> val = msgs.front();
 		msgs.pop();
 		// do something
 		if (DEBUG) std::cout << "[POP] : " << val.second << '\n';
-		std::string msg = std::to_string(val.first.getFd()) + " : " + std::string(val.second);
+		std::string msg = std::to_string(val.first->getFd()) + " : " + std::string(val.second);
 		userPool->broadcast(msg);
 	}
 
@@ -45,14 +45,14 @@ public:
 		userPool = _userPool;
 	}
 
-	std::pair<User, std::string> front() { return msgs.front(); }
+	std::pair<User*, std::string> front() { return msgs.front(); }
 
 	void runThread() { m_thread = std::thread(&MessageQueue::run, this); };
 	void joinThread() { m_thread.join(); };
 
 
 private:
-	std::queue<std::pair<User, std::string>> msgs;
+	std::queue<std::pair<User*, std::string>> msgs;
 	mutable std::mutex m;
 	std::condition_variable c;
 	std::thread m_thread;
