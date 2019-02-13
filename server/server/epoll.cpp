@@ -15,6 +15,9 @@ int Epoll::initSockFd()
 		exit(0);
 	}
 
+	int option = 1;
+	setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
+
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_family = AF_INET;
