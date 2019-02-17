@@ -13,7 +13,7 @@
 #include "const.h"
 #include "common.h"
 #include "User.h"
-#include "UserPool.h"
+#include "Userpool.h"
 
 class MessageQueue
 {
@@ -42,34 +42,28 @@ public:
 		user->appendRemainMsg(data);
 		std::vector<char> v = user->getRemainMsg();
 
-		char *buffer = new char[v.size()];
-		std::copy(v.begin(), v.end(), buffer);
+		int start = 0;
+		int delimSize = strlen(delimiter);
+
+		for (size_t i = 0; i <= v.size() - delimSize; ++i) {
+			int j;
+			for (j = 0; j < delimSize; j++) {
+				if (v[i + j] != delimiter[j]) break;
+			}
+			if (j == delimSize) {
+				for (size_t p = start; p < i; p++) {
+					// do something
+					// start ~ i - 1
+					std::cout << unsigned(v[p]) << '\n';
+				}
+
+				start = i + delimSize;
+			}
+		}
+
+		char *rest = &v[start];
 		user->clearRemainMsg();
-
-		char* p = strstr(buffer, delimiter);
-
-		while (p) {
-			// find delimiter at p;
-			p[0] = '\0';
-			std::cout << buffer;
-			p[0] = '>';
-		}
-		// std::cout << "remain size : " << strlen(msg) << '\n';
-
-		/*
-		std::string msg = user->getRemainMsg() + val.second;
-		// token split
-		size_t pos = 0;
-		std::string token;
-		while ((pos = msg.find(delimiter)) != std::string::npos) {
-			token = msg.substr(0, pos);
-			std::cout << token << std::endl;
-			std::string tokenMsg = std::to_string(user->getFd()) + " : " + token;
-			userPool->broadcast(tokenMsg);
-			if (DEBUG) std::cout << "[POP] : " << val.second << '\n';
-			msg.erase(0, pos + delimiter.length());
-		}
-		user->setRemainMsg(msg);*/
+		user->appendRemainMsg(rest);
 	}
 
 	void setUserPool(UserPool* _userPool) {
