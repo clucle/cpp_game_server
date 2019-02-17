@@ -20,7 +20,10 @@ class Socket:
         self.t.join()
 
     def send(self, seq, data):
-        msg = bytes(str(seq) + data + SOCKET_DELIMITER, "utf-8")
+        msg = bytearray("", "utf-8")
+        msg.append(data)
+        msg.append(seq)
+        msg.extend(str.encode(SOCKET_DELIMITER))
         self.s.send(msg)
 
     def recv(self):

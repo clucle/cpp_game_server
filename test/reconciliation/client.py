@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 from reconciliation.player import Player
 from reconciliation.socket_handler import Socket
+from reconciliation.settings import PRESS_KEY_LEFT, PRESS_KEY_RIGHT
+
 
 pygame.init()
 screen = pygame.display.set_mode((400, 300))
@@ -19,6 +21,7 @@ white = (255, 255, 255)
 socket = Socket()
 socket.run()
 
+
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -26,9 +29,9 @@ while not done:
             socket.close()
         if event.type == pygame.KEYDOWN:
             if event.key == K_RIGHT:
-                player.send(socket, "press key right")
+                player.send(socket, PRESS_KEY_LEFT)
             elif event.key == K_LEFT:
-                player.send(socket, "press key left")
+                player.send(socket, PRESS_KEY_RIGHT)
 
     # DRAW
     screen.fill(white)
