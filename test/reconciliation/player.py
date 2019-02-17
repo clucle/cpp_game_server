@@ -17,5 +17,9 @@ class Player:
     def draw(self):
         pygame.draw.circle(self.screen, self.color, [self.x, self.y], self.rad)
 
+    def send(self, socket, data):
+        self.seq += 1
+        socket.send(self.seq, data)
+
     def move(self, x_diff):
         self.x += x_diff
