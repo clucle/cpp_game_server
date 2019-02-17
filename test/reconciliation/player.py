@@ -21,9 +21,9 @@ class Player:
     def send(self, socket, data):
         self.seq += 1
         if data == PRESS_KEY_LEFT:
-            socket.send(self.seq, 0)
-        elif data == PRESS_KEY_RIGHT:
             socket.send(self.seq, 1)
+        elif data == PRESS_KEY_RIGHT:
+            socket.send(self.seq, 2)
 
     def move(self, x_diff):
         self.x += x_diff
