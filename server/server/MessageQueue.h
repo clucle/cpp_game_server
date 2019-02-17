@@ -20,10 +20,15 @@ class MessageQueue
 public:
 	int size() { return (int)msgs.size(); }
 
-	void push(User* user, std::string msg) {
+	void push(int fd, char msg[]) {
+		User* user = userPool->getUser(fd);
+		std::cout << "byte reads : " << msg << '\n';
+		std::cout << "read : " << unsigned(msg[0]) << '\n';
+		std::cout << "read : " << unsigned(msg[1]) << '\n';
+
 		std::lock_guard<std::mutex> lock(m);
 		if (DEBUG) std::cout << "[QUEUE] ip : " << user->getIp() << " fd : " << user->getFd() << " msgs : " << msg << '\n';
-		msgs.push(std::make_pair(user, msg));
+		// msgs.push(std::make_pair(user, msg));
 		c.notify_one();
 	}
 

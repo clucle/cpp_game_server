@@ -112,16 +112,17 @@ void Epoll::run()
 			}
 			else {
 				bytes_read = read(events[i].data.fd, read_buffer, READ_SIZE);
-				User* user = userPool->getUser(events[i].data.fd);
 				if (bytes_read <= 0) {
+					User* user = userPool->getUser(events[i].data.fd);
 					userPool->delUser(user);
 					userPool->print();
 					close(events[i].data.fd);
 					continue;
 				}
-				read_buffer[bytes_read] = '\0';
-				std::string read_string(read_buffer);
-				messageQueue->push(user, read_string);
+
+				char save_buffer[READ_SIZE + 1];
+				strncpy(save_buffer, read_buffer, bytes_read);
+				messageQueue->push(events[i].data.fd, save_buffer);
 			}
 		}
 	}
