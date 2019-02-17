@@ -1,32 +1,10 @@
 import pygame
 from pygame.locals import *
-import random
+from reconciliation.player import Player
 
 pygame.init()
 screen = pygame.display.set_mode((400, 300))
 done = False
-
-
-def random_color():
-    return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
-
-
-class Player:
-    X_DIFF = 40
-
-    def __init__(self, x, screen):
-        self.x = x
-        self.y = 40
-        self.seq = 0
-        self.rad = 40
-        self.color = random_color()
-        self.screen = screen
-
-    def draw(self):
-        pygame.draw.circle(self.screen, self.color, [self.x, self.y], self.rad)
-
-    def move(self, x_diff):
-        self.x += x_diff
 
 
 # player list
