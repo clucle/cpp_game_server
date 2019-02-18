@@ -56,7 +56,17 @@ public:
 					// start ~ i - 1
 					std::cout << unsigned(v[p]) << '\n';
 				}
-
+				int op = (signed(v[start]) & 127);
+				switch(op) {
+				case 1:
+					user->moveRight();
+					break;
+				case 2:
+					user->moveLeft();
+					break;
+				}
+				std::string msg = std::to_string(op) + std::to_string(user->getFd()) + std::to_string(user->getSeq()) + std::to_string(user->getPos());
+				userPool->broadcast(user, msg);
 				start = i + delimSize;
 			}
 		}

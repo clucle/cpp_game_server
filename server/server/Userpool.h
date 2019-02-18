@@ -33,9 +33,15 @@ public:
 			std::cout << " " << it->first << " " << it->second->getFd() << " " << it->second->getIp() << std::endl;
 	}
 
-	void broadcast(std::string msg) {
+	void broadcast(User* user, std::string msg) {
 		for (auto it = userPool.begin(); it != userPool.end(); ++it) {
-			write(it->second->getFd(), &msg[0], msg.length());
+			if (it->second != user) {
+				write(it->second->getFd(), &msg[0], msg.length());
+			}
+			else {
+				std::string own = "me" + msg;
+				write(it->second->getFd(), &own[0], own.length());
+			}
 		}
 	}
 
