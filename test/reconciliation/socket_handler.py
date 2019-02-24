@@ -19,10 +19,10 @@ class Socket:
         self.s.close()
         self.t.join()
 
-    def send(self, seq, data):
+    def send(self, data):
         msg = bytearray("", "utf-8")
-        msg.append(data)
-        msg.append(seq)
+        msg.extend(data['op'].to_bytes(4, byteorder='little'))
+        msg.extend(data['seq'].to_bytes(4, byteorder='little'))
         msg.extend(str.encode(SOCKET_DELIMITER))
         self.s.send(msg)
 
