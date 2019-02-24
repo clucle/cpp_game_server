@@ -15,11 +15,16 @@ public:
 
 	int getFd() { return fd; }
 	std::string getIp() { return ip; }
-	std::vector<char> getRemainMsg() { return remainMsg; }
-	void clearRemainMsg() { remainMsg.clear(); }
+	std::vector<char>* getRemainMsg() {
+		return remainMsg;
+	}
+	void clearRemainMsg() { 
+		std::cout << "CLEAN\n";
+		remainMsg->clear();
+	}
 	void appendRemainMsg(char* msg) {
 		for (size_t i = 0; i < strlen(msg); i++) {
-			remainMsg.push_back(msg[i]);
+			remainMsg->push_back(msg[i]);
 		}
 	}
 	void moveRight() { pos += step; seq++; }
@@ -33,6 +38,6 @@ private:
 	int seq;
 	const int step = 10;
 	std::string ip;
-	std::vector<char> remainMsg;
+	std::vector<char>* remainMsg = new std::vector<char>;
 };
 #endif

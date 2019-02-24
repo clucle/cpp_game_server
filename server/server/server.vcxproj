@@ -83,6 +83,7 @@
     <ClInclude Include="epoll.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="MessageQueue.h" />
+    <ClInclude Include="protocol.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UserPool.h" />
   </ItemGroup>
