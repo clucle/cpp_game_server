@@ -57,7 +57,7 @@ public:
 					std::cout << unsigned(v[p]) << '\n';
 				}
 				int op = (signed(v[start]) & 127);
-				switch(op) {
+				switch (op) {
 				case 1:
 					user->moveRight();
 					break;
@@ -98,7 +98,6 @@ private:
 			MessageQueue::pop();
 		}
 	}
-	bool DEBUG = 1;
 	const char* delimiter = ">~<";
 };
 #endif

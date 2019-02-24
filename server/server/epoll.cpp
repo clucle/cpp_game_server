@@ -120,9 +120,15 @@ void Epoll::run()
 					continue;
 				}
 
-				char save_buffer[READ_SIZE + 1];
-				strncpy(save_buffer, read_buffer, bytes_read);
-				messageQueue->push(events[i].data.fd, save_buffer);
+				struct DefaultProtocol defaultProtocol;
+				memcpy(&(defaultProtocol.op), read_buffer, bytes_read);
+
+				if (DEBUG) {
+					std::cout << "op : " << defaultProtocol.op << '\n';
+					std::cout << "seq : " << defaultProtocol.seq << '\n';
+					std::cout << defaultProtocol.data << '\n';
+				}
+				// messageQueue->push(events[i].data.fd, save_buffer);
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 #include "const.h"
 #include "common.h"
 #include "MessageQueue.h"
+#include "protocol.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
