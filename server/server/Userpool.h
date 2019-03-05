@@ -7,6 +7,8 @@
 #include <iostream>
 #include <unordered_map>
 
+#include "protocol.h"
+
 class UserPool
 {
 public:
@@ -33,15 +35,10 @@ public:
 			std::cout << " " << it->first << " " << it->second->getFd() << " " << it->second->getIp() << std::endl;
 	}
 
-	void broadcast(User* user, std::string msg) {
+	void broadcast(User* user, char* msg) {
+		UserMoveProtocol* d = (UserMoveProtocol*) msg;
 		for (auto it = userPool.begin(); it != userPool.end(); ++it) {
-			if (it->second != user) {
-				write(it->second->getFd(), &msg[0], msg.length());
-			}
-			else {
-				std::string own = "me" + msg;
-				write(it->second->getFd(), &own[0], own.length());
-			}
+			write(it->second->getFd(), d, sizeof(UserMoveProtocol));
 		}
 	}
 
