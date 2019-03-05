@@ -27,6 +27,7 @@ public:
 
 		if (DEBUG) std::cout << "[QUEUE] ip : " << user->getIp() << " fd : " << user->getFd() << '\n';
 		if (DEBUG) {
+			std::cout << "id : " << defaultProtocol.id << '\n';
 			std::cout << "op : " << defaultProtocol.op << '\n';
 			std::cout << "seq : " << defaultProtocol.seq << '\n';
 			std::cout << defaultProtocol.data << '\n';
@@ -58,7 +59,8 @@ public:
 		}
 
 		UserMoveProtocol data;
-		data.id = 3;
+		data.id = defaultProtocol.id;
+		data.seq = defaultProtocol.seq;
 		data.pos = user->getPos();
 		userPool->broadcast(user, (char*)reinterpret_cast<char*>(&data));
 	}

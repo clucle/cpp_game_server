@@ -121,8 +121,7 @@ void Epoll::run()
 				}
 
 				struct DefaultProtocol defaultProtocol;
-				memcpy(&(defaultProtocol.op), read_buffer, bytes_read);
-
+				memcpy(&(defaultProtocol.id), read_buffer, bytes_read);
 				messageQueue->push(events[i].data.fd, defaultProtocol);
 			}
 		}
