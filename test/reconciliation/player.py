@@ -8,8 +8,8 @@ player_dict = {}
 player_screen = None
 
 
-def generate_player():
-    player = Player(x=40, screen=player_screen)
+def generate_player(uid):
+    player = Player(x=40, screen=player_screen, uid=uid)
     player_dict[player.uid] = player
     return player
 
@@ -20,10 +20,11 @@ def set_player_screen(screen):
 
 
 def set_player_pos(uid, seq, pos):
-
     if uid not in player_dict:
-        player = Player(x=40, uid=uid, screen=player_screen)
-        player_dict[player.uid] = player
+        p = generate_player(uid)
+        p.x = pos + 40
+        p.seq = seq
+        return
 
     if player_dict[uid].seq >= seq:
         return
@@ -34,7 +35,7 @@ def set_player_pos(uid, seq, pos):
 class Player:
     X_DIFF = 40
 
-    def __init__(self, x, screen, uid=random.randint(0, 210000000)):
+    def __init__(self, x, screen, uid):
         self.x = x
         self.y = 40
         self.uid = uid

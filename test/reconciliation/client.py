@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame.locals import *
 from reconciliation.player import player_dict, set_player_screen, generate_player
 from reconciliation.socket_handler import Socket
@@ -14,7 +15,9 @@ done = False
 player_screen = screen
 set_player_screen(screen)
 
-player = generate_player()
+
+player_id = random.randint(0, 210000000)
+player = generate_player(player_id)
 
 # color
 white = (255, 255, 255)
@@ -31,9 +34,11 @@ while not done:
             socket.close()
         if event.type == pygame.KEYDOWN:
             if event.key == K_RIGHT:
-                player.send(socket, PRESS_KEY_LEFT)
+                print(player_id)
+                player_dict[player_id].send(socket, PRESS_KEY_LEFT)
             elif event.key == K_LEFT:
-                player.send(socket, PRESS_KEY_RIGHT)
+                print(player_id)
+                player_dict[player_id].send(socket, PRESS_KEY_RIGHT)
 
     # DRAW
     screen.fill(white)
