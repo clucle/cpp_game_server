@@ -21,6 +21,7 @@ class Socket:
 
     def send(self, data):
         msg = bytearray("", "utf-8")
+        msg.extend(data['id'].to_bytes(4, byteorder='little'))
         msg.extend(data['op'].to_bytes(4, byteorder='little'))
         msg.extend(data['seq'].to_bytes(4, byteorder='little'))
         msg.extend(str.encode(SOCKET_DELIMITER))

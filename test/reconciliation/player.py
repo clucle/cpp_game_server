@@ -1,5 +1,6 @@
 
 import pygame
+import random
 from reconciliation.utils import random_color
 from reconciliation.settings import PRESS_KEY_LEFT, PRESS_KEY_RIGHT
 
@@ -10,6 +11,7 @@ class Player:
     def __init__(self, x, screen):
         self.x = x
         self.y = 40
+        self.id = random.randint(0, 210000000)
         self.seq = 0
         self.rad = 40
         self.color = random_color()
@@ -20,7 +22,7 @@ class Player:
 
     def send(self, socket, data):
         self.seq += 1
-        send_data = {'seq': self.seq}
+        send_data = {'seq': self.seq, 'id': self.id}
         if data == PRESS_KEY_LEFT:
             send_data['op'] = 1
         elif data == PRESS_KEY_RIGHT:
