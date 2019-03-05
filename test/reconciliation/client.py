@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from reconciliation.player import Player
+from reconciliation.player import player_dict, set_player_screen, generate_player
 from reconciliation.socket_handler import Socket
 from reconciliation.settings import PRESS_KEY_LEFT, PRESS_KEY_RIGHT
 
@@ -11,8 +11,10 @@ done = False
 
 
 # player list
-player = Player(x=40, screen=screen)
-player_list = [player]
+player_screen = screen
+set_player_screen(screen)
+
+player = generate_player()
 
 # color
 white = (255, 255, 255)
@@ -36,7 +38,7 @@ while not done:
     # DRAW
     screen.fill(white)
 
-    for player in player_list:
+    for uid, player in player_dict.items():
         player.draw()
 
     pygame.display.update()

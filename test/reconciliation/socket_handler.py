@@ -3,6 +3,8 @@
 import socket
 import threading
 from reconciliation.settings import SERVER_HOST, SERVER_PORT, SOCKET_DELIMITER
+from reconciliation.user_move_protocol import UserMoveProtocol
+from reconciliation.player import set_player_pos
 
 HOST = SERVER_HOST
 PORT = int(SERVER_PORT)
@@ -31,9 +33,10 @@ class Socket:
         while True:
             try:
                 data = self.s.recv(1024)
-                data = str(data).split("b'", 1)[1].rsplit("'", 1)[0]
-                # some logic
-                print(data)
+                buf = bytearray(data)
+                s = UserMoveProtocol.from_buffer(buf)
+                set_player_pos(s.id, s.seq, s.pos)
+
             except socket.timeout:
                 continue
             except socket.error:
