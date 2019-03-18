@@ -44,8 +44,10 @@ while not done:
     screen.fill(white)
 
     for uid, player in player_dict.items():
+        player.update()
         player.draw()
 
     pygame.display.update()
+    pygame.time.delay(12)
 
 pygame.display.flip()
